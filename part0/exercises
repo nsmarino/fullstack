@@ -1,1 +1,32 @@
+0.4 new note
 
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+server->browser: HTTP status code 302 - URL redirect /notes
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+server->browser: main.css
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+server->browser: main.js
+browser->server: https://fullstack-exampleapp.herokuapp.com/data.json
+server->browser: data.json
+note over browser: browser executes event handler and renders notes
+
+0.5 single page app
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa
+server->browser: 200 - https://fullstack-exampleapp.herokuapp.com/spa
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+server->browser: 200 - main.css
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa.js
+server->browser: 200 - spa.js
+browser->server: https://fullstack-exampleapp.herokuapp.com/data.json
+server->browser: 200 - data.json
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/favicon.ico
+server->browser: 404 Not Found
+
+
+0.6 New note
+
+browser->server: POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+note over browser: user writes in input field and clicks submit. new note is rendered on page.
+note over server: server receives submission as JSON data
+server->browser: 201: confirms that new note was created
