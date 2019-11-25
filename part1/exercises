@@ -1,0 +1,237 @@
+// FIRST SERIES OF EXERCISES
+
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+
+
+const Header = (props) => {
+    return (
+        <h1>{props.course}</h1>
+    )
+}
+
+const Content = (props) => {
+    const [part1, part2, part3]= props.parts
+    let countTest = props.counter;
+    console.log(countTest)
+
+    return (
+        <div>
+            <Part part={part1.name} exercises={part1.exercises} />
+            <Part part={part2.name} exercises={part2.exercises} />
+            <Part part={part3.name} exercises={part3.exercises} />
+            </div>
+    )
+}
+
+const Part = (props) => {
+    return (
+        <p>
+            {props.part} {props.exercises}
+        </p>
+    )
+}
+
+const Total = (props) => {
+    const [part1, part2, part3]= props.parts
+    return (
+        <p>number of exercises {part1.exercises + part2.exercises + part3.exercises}</p>
+    )
+}
+
+const Display = ({ counter }) => <div>{counter}</div>
+
+const Button = (props) => (
+    <button onClick={props.handleClick}>{props.text}</button>
+)
+
+const App = () => {
+    const course = {
+        name: 'Half Stack application development',
+        parts: [
+          {
+            name: 'Fundamentals of React',
+            exercises: 10
+          },
+          {
+            name: 'Using props to pass data',
+            exercises: 7
+          },
+          {
+            name: 'State of a component',
+            exercises: 14
+          }
+        ]
+      }
+
+    // useState - returns array with state container and state-changing function
+    const [ value, setValue ] = useState(0)
+
+    const setToValue = (value) => setValue(value)
+
+    return (
+        <div>
+            <Header course={course.name} />
+            <Content parts={course.parts} counter={value}
+
+            />
+            <Total 
+                parts={course.parts}
+            />
+
+            <Display counter={value}/>
+
+            <Button handleClick={() => setToValue(value + 1)}  text="+"/>
+
+            <Button handleClick={() => setToValue(0)}  text="+"/>
+
+   
+        </div>
+
+    )
+
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
+
+// SECOND SERIES OF EXERCISES
+
+import React, { useState } from 'react'
+import ReactDOM from 'react-dom'
+
+
+const Button = (props) => {
+    return (
+        <button onClick={props.handleClick}>{props.text}</button>
+    )
+}
+
+const Statistic = (props) => (
+  <tr>
+    <td>{props.text}</td> 
+    <td>{props.value}</td>
+  </tr> 
+)
+
+const Statistics = (props) => {
+    if (props.good === 0 && props.neutral === 0 && props.bad === 0) {
+        return (
+        <div>
+          <h2>statistics</h2> 
+          <p>no statistics yet</p>  
+        </div>
+        )
+    }
+    return (
+        <div>
+        <h2>statistics</h2>
+        <table>
+            <tbody>
+        <Statistic text="good" value={props.good}/>
+        <Statistic text="neutral" value={props.neutral}/>
+        <Statistic text="bad" value={props.bad}/>
+        <Statistic text="all" value={props.grandTotal} />
+        <Statistic text="positive" value={`${props.percentPositive || 0} %`} />
+        </tbody> 
+        </table>
+        </div>
+
+)
+}
+
+const App = () => {
+
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+  let grandTotal = good + neutral + bad
+  let percentPositive = Math.floor((good / grandTotal) * 100)
+
+  const setValue = (value, setValue) => setValue(value + 1)
+
+  const setNewGood = () => setValue(good, setGood)
+  const setNewNeutral = () => setValue(neutral, setNeutral)
+  const setNewBad = () => setValue(bad, setBad)
+
+  return (
+    <div>
+      <h1>give feedback</h1>
+      <Button handleClick={setNewGood} text="good"/>
+      <Button handleClick={setNewNeutral} text="neutral"/>
+      <Button handleClick={setNewBad} text="bad"/>
+
+      <Statistics 
+        good={good}
+        neutral={neutral}
+        bad={bad}
+        grandTotal={grandTotal}
+        percentPositive={percentPositive}
+      />
+
+    </div>
+  )
+}
+
+ReactDOM.render(<App />, 
+  document.getElementById('root')
+)
+
+// THIRD SERIES OF EXERCISES
+
+import React, { useState } from 'react'
+import ReactDOM from 'react-dom'
+import './index.css';
+
+const Button=(props)=>(<button onClick={props.handleClick}>{props.text}</button>)
+
+const App = (props) => {
+  const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState([0, 0, 0, 0, 0])
+  const [index, setIndex] = useState(null)
+
+  const changeAnecdote = (selected) => setSelected(selected)
+  const updatePoints = (newPoints) => setPoints(newPoints)
+  const updateIndex = (newIndex) => setIndex(newIndex)
+
+  const upVote = () => {
+    const copy = [...points]
+    copy[selected] ++
+    updatePoints(copy)
+    updateIndex(copy.indexOf(Math.max(...copy)))
+    }
+
+  return (
+    <div>
+      <h1>anecdote of the day</h1>
+      <p>{props.anecdotes[selected]} <br></br>has {points[selected]} votes</p>
+
+      <Button 
+        handleClick={() => changeAnecdote(Math.floor(Math.random() * 5))}
+        text="next anecdote"
+       />
+
+       <Button handleClick={upVote} text="vote" />
+
+       <h2>anecdote with the most votes</h2>
+
+       <p>{props.anecdotes[index]}</p>
+
+    </div>
+  )
+}
+
+const anecdotes = [
+  'If it hurts, do it more often',
+  'Adding manpower to a late software project makes it later!',
+  'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+  'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+  'Premature optimization is the root of all evil.',
+  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
+]
+
+ReactDOM.render(
+  <App anecdotes={anecdotes} />,
+  document.getElementById('root')
+)
